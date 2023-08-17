@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction to micromodal</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to micromodal</h1>
+
+
+
+<div id="getting-started" class="section level2">
+<h2>Getting started</h2>
+<p>The goal of micromodal is to create simple and elegant modal dialogs
+which are <a href="https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal">WAI-ARIA
+guidelines</a> compliant with minimal configuration.</p>
+<p>Things to keep in mind:</p>
+<ol style="list-style-type: decimal">
+<li>The modal’s trigger (usually a button or a link) must have the
+attribute <code>data-micromodal-trigger</code> with a value of the
+modal’s id. So if the modal has the id “modal-1”, then you will
+have:</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="st">`</span><span class="at">data-micromodal-trigger</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;modal-1&quot;</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>If you need to add something to dismiss the modal (eg. button or
+link), give it the attribute <code>data-micromodal-close</code>. In
+<code>{shiny}</code> this is the equivalent of:</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="st">`</span><span class="at">data-micromodal-close</span><span class="st">`</span> <span class="ot">=</span> <span class="cn">NA</span></span></code></pre></div>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<p>See <a href="https://mwavu.shinyapps.io/micromodal/">live demo
+here</a>.</p>
+<div id="simple-usage" class="section level3">
+<h3>Simple usage</h3>
+<p>Though a bit long, this example clearly depicts all there is to know
+about using <code>{micromodal}</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(micromodal)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>server <span class="ot">&lt;-</span> \(input, output, session) {</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  </span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>}</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>ui <span class="ot">&lt;-</span> bslib<span class="sc">::</span><span class="fu">page</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Micromodal&quot;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="at">theme =</span> bslib<span class="sc">::</span><span class="fu">bs_theme</span>(<span class="at">version =</span> <span class="dv">5</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  <span class="co"># inform shiny to use {micromodal}:</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="fu">use_micromodal</span>(),</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>  <span class="co"># your normal UI code:</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">div</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>    <span class="at">class =</span> <span class="st">&quot;container&quot;</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">div</span>(</span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>      <span class="at">class =</span> <span class="st">&quot;container my-5&quot;</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>      tags<span class="sc">$</span><span class="fu">h1</span>(<span class="st">&quot;Micromodal.js in Shiny&quot;</span>, <span class="at">class =</span> <span class="st">&quot;mb-5&quot;</span>),</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>      <span class="co"># trigger for &quot;modal-1&quot;</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>      <span class="fu">actionButton</span>(</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>        <span class="at">inputId =</span> <span class="st">&quot;show_modal_1&quot;</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">&quot;Exhibit 1&quot;</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>        <span class="at">class =</span> <span class="st">&quot;btn-outline-primary px-3&quot;</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>        <span class="st">`</span><span class="at">data-micromodal-trigger</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;modal-1&quot;</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>      ),</span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>      <span class="co"># trigger for &quot;modal-2&quot;</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>      <span class="fu">actionButton</span>(</span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>        <span class="at">inputId =</span> <span class="st">&quot;show_modal_2&quot;</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">&quot;Exhibit 2&quot;</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a>        <span class="at">class =</span> <span class="st">&quot;btn-outline-primary px-3&quot;</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a>        <span class="st">`</span><span class="at">data-micromodal-trigger</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;modal-2&quot;</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a>      )</span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a>    ),</span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a>    <span class="co"># modal-1:</span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a>    <span class="fu">micromodal</span>(</span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>      <span class="at">id =</span> <span class="st">&quot;modal-1&quot;</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Login&quot;</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a>      <span class="at">content =</span> <span class="fu">tagList</span>(</span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a>        <span class="fu">textInput</span>(</span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a>          <span class="at">inputId =</span> <span class="st">&quot;name&quot;</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a>          <span class="at">label =</span> <span class="st">&quot;Name&quot;</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a>          <span class="at">width =</span> <span class="st">&quot;400px&quot;</span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a>        ),</span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a>        <span class="fu">passwordInput</span>(</span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a>          <span class="at">inputId =</span> <span class="st">&quot;password&quot;</span>,</span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a>          <span class="at">label =</span> tags<span class="sc">$</span><span class="fu">div</span>(</span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a>            tags<span class="sc">$</span><span class="fu">span</span>(<span class="st">&quot;Password&quot;</span>),</span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a>            tags<span class="sc">$</span><span class="fu">span</span>(<span class="st">&quot;(required)&quot;</span>, <span class="at">class =</span> <span class="st">&quot;text-muted fw-light&quot;</span>)</span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a>          ),</span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a>          <span class="at">width =</span> <span class="st">&quot;400px&quot;</span></span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a>        ) <span class="sc">|&gt;</span> <span class="fu">tagAppendAttributes</span>(<span class="at">class =</span> <span class="st">&quot;mb-0&quot;</span>),</span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">div</span>(</span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a>          <span class="st">&quot;Must be atleast 6 characters long.&quot;</span>,</span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a>          <span class="at">class =</span> <span class="st">&quot;text-muted fw-light&quot;</span></span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a>        )</span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a>      ),</span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a>      <span class="at">footer =</span> <span class="fu">tagList</span>(</span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">button</span>(</span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a>          <span class="at">class =</span> <span class="st">&quot;modal__btn modal__btn-primary&quot;</span>,</span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a>          <span class="st">&quot;Continue&quot;</span></span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a>        ),</span>
+<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">a</span>(</span>
+<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a>          <span class="at">href =</span> <span class="st">&quot;#&quot;</span>,</span>
+<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a>          <span class="at">class =</span> <span class="st">&quot;ms-3&quot;</span>,</span>
+<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a>          <span class="st">`</span><span class="at">data-micromodal-close</span><span class="st">`</span> <span class="ot">=</span> <span class="cn">NA</span>,</span>
+<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a>          <span class="st">`</span><span class="at">aria-label</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;Close this dialog window&quot;</span>,</span>
+<span id="cb3-67"><a href="#cb3-67" tabindex="-1"></a>          <span class="st">&quot;Cancel&quot;</span></span>
+<span id="cb3-68"><a href="#cb3-68" tabindex="-1"></a>        )</span>
+<span id="cb3-69"><a href="#cb3-69" tabindex="-1"></a>      )</span>
+<span id="cb3-70"><a href="#cb3-70" tabindex="-1"></a>    ),</span>
+<span id="cb3-71"><a href="#cb3-71" tabindex="-1"></a>    <span class="co"># modal-2:</span></span>
+<span id="cb3-72"><a href="#cb3-72" tabindex="-1"></a>    <span class="fu">micromodal</span>(</span>
+<span id="cb3-73"><a href="#cb3-73" tabindex="-1"></a>      <span class="at">id =</span> <span class="st">&quot;modal-2&quot;</span>,</span>
+<span id="cb3-74"><a href="#cb3-74" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Micromodal&quot;</span>,</span>
+<span id="cb3-75"><a href="#cb3-75" tabindex="-1"></a>      <span class="at">content =</span> <span class="fu">tagList</span>(</span>
+<span id="cb3-76"><a href="#cb3-76" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">p</span>(<span class="st">&quot;This is a completely accessible modal.&quot;</span>),</span>
+<span id="cb3-77"><a href="#cb3-77" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">p</span>(</span>
+<span id="cb3-78"><a href="#cb3-78" tabindex="-1"></a>          <span class="st">&quot;Try hitting the&quot;</span>,</span>
+<span id="cb3-79"><a href="#cb3-79" tabindex="-1"></a>          tags<span class="sc">$</span><span class="fu">code</span>(<span class="st">&quot;tab&quot;</span>),</span>
+<span id="cb3-80"><a href="#cb3-80" tabindex="-1"></a>          <span class="st">&quot;key* and notice how the focus stays&quot;</span>,</span>
+<span id="cb3-81"><a href="#cb3-81" tabindex="-1"></a>          <span class="st">&quot;within the modal itself. To close modal hit the&quot;</span>,</span>
+<span id="cb3-82"><a href="#cb3-82" tabindex="-1"></a>          tags<span class="sc">$</span><span class="fu">code</span>(<span class="st">&quot;esc&quot;</span>),</span>
+<span id="cb3-83"><a href="#cb3-83" tabindex="-1"></a>          <span class="st">&quot;button, click on the overlay or just click the close button.&quot;</span></span>
+<span id="cb3-84"><a href="#cb3-84" tabindex="-1"></a>        ),</span>
+<span id="cb3-85"><a href="#cb3-85" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">p</span>(<span class="st">&quot;*&quot;</span>, tags<span class="sc">$</span><span class="fu">code</span>(<span class="st">&quot;alt + tab&quot;</span>), <span class="st">&quot;in safari&quot;</span>)</span>
+<span id="cb3-86"><a href="#cb3-86" tabindex="-1"></a>      ),</span>
+<span id="cb3-87"><a href="#cb3-87" tabindex="-1"></a>      <span class="at">footer =</span> <span class="fu">tagList</span>(</span>
+<span id="cb3-88"><a href="#cb3-88" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">button</span>(</span>
+<span id="cb3-89"><a href="#cb3-89" tabindex="-1"></a>          <span class="at">class =</span> <span class="st">&quot;modal__btn modal__btn-primary&quot;</span>,</span>
+<span id="cb3-90"><a href="#cb3-90" tabindex="-1"></a>          <span class="st">&quot;Continue&quot;</span></span>
+<span id="cb3-91"><a href="#cb3-91" tabindex="-1"></a>        ),</span>
+<span id="cb3-92"><a href="#cb3-92" tabindex="-1"></a>        tags<span class="sc">$</span><span class="fu">button</span>(</span>
+<span id="cb3-93"><a href="#cb3-93" tabindex="-1"></a>          <span class="at">class =</span> <span class="st">&quot;modal__btn ms-2&quot;</span>,</span>
+<span id="cb3-94"><a href="#cb3-94" tabindex="-1"></a>          <span class="st">`</span><span class="at">data-micromodal-close</span><span class="st">`</span> <span class="ot">=</span> <span class="cn">NA</span>,</span>
+<span id="cb3-95"><a href="#cb3-95" tabindex="-1"></a>          <span class="st">`</span><span class="at">aria-label</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;Close this dialog window&quot;</span>,</span>
+<span id="cb3-96"><a href="#cb3-96" tabindex="-1"></a>          <span class="st">&quot;Close&quot;</span></span>
+<span id="cb3-97"><a href="#cb3-97" tabindex="-1"></a>        )</span>
+<span id="cb3-98"><a href="#cb3-98" tabindex="-1"></a>      )</span>
+<span id="cb3-99"><a href="#cb3-99" tabindex="-1"></a>    )</span>
+<span id="cb3-100"><a href="#cb3-100" tabindex="-1"></a>  )</span>
+<span id="cb3-101"><a href="#cb3-101" tabindex="-1"></a>)</span>
+<span id="cb3-102"><a href="#cb3-102" tabindex="-1"></a></span>
+<span id="cb3-103"><a href="#cb3-103" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+<div id="with-uioutput-renderui" class="section level3">
+<h3>With uiOutput + renderUI</h3>
+<p>If need be, you can render the modal and it’s trigger
+dynamically.</p>
+<div id="i.-render-modal" class="section level4">
+<h4>I. Render modal</h4>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">library</span>(micromodal)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="fu">use_micromodal</span>(),</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="fu">selectInput</span>(</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    <span class="at">inputId =</span> <span class="st">&quot;selector&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">&quot;Pick a letter&quot;</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    <span class="at">choices =</span> letters</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>  ),</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  <span class="fu">actionButton</span>(</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    <span class="at">inputId =</span> <span class="st">&quot;trigger&quot;</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">&quot;Trigger modal&quot;</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    <span class="st">`</span><span class="at">data-micromodal-trigger</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;modal-1&quot;</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>  ),</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>  <span class="fu">uiOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;mymodal&quot;</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>)</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>server <span class="ot">&lt;-</span> \(input, output, session) {</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>  output<span class="sc">$</span>mymodal <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>    <span class="fu">tagList</span>(</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>      <span class="fu">micromodal</span>(</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>        <span class="at">id =</span> <span class="st">&quot;modal-1&quot;</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">&quot;Rendered serverside&quot;</span>,</span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>        <span class="at">content =</span> <span class="fu">tagList</span>(</span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>          tags<span class="sc">$</span><span class="fu">p</span>(</span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>            <span class="st">&quot;You selected the letter &#39;&quot;</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>            input<span class="sc">$</span>selector,</span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>            <span class="st">&quot;&#39;&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>          )</span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>        )</span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>      )</span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>    )</span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>  })</span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>}</span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+<div id="ii.-render-modal-trigger" class="section level4">
+<h4>II. Render modal + trigger</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">library</span>(micromodal)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="fu">use_micromodal</span>(),</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="fu">selectInput</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>    <span class="at">inputId =</span> <span class="st">&quot;selector&quot;</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">&quot;Pick a letter&quot;</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>    <span class="at">choices =</span> letters</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  ),</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  <span class="fu">uiOutput</span>(<span class="at">outputId =</span> <span class="st">&quot;mymodal&quot;</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>)</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>server <span class="ot">&lt;-</span> \(input, output, session) {</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>  output<span class="sc">$</span>mymodal <span class="ot">&lt;-</span> <span class="fu">renderUI</span>({</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>    <span class="fu">tagList</span>(</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>      <span class="fu">actionButton</span>(</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>        <span class="at">inputId =</span> <span class="st">&quot;trigger&quot;</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>        <span class="at">label =</span> <span class="st">&quot;Trigger modal&quot;</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>        <span class="st">`</span><span class="at">data-micromodal-trigger</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;modal-1&quot;</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>      ),</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>      <span class="fu">micromodal</span>(</span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a>        <span class="at">id =</span> <span class="st">&quot;modal-1&quot;</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">&quot;Rendered serverside&quot;</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a>        <span class="at">content =</span> <span class="fu">tagList</span>(</span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a>          tags<span class="sc">$</span><span class="fu">p</span>(</span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a>            <span class="st">&quot;You selected the letter &#39;&quot;</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a>            input<span class="sc">$</span>selector,</span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a>            <span class="st">&quot;&#39;&quot;</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a>          )</span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a>        )</span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a>      )</span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a>    )</span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a>  })</span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a>}</span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+<p><strong>NB: micromodal might not work with other <code>*Output</code>
++ <code>render*</code> eg. <code>plotOutput()</code></strong></p>
+</div>
+</div>
+<div id="inside-modules" class="section level3">
+<h3>Inside modules</h3>
+<p>As far as usage of <code>{micromodal}</code> in modules is concerned,
+I only need to remind you of one thing:</p>
+<blockquote>
+<p>It’s always a missing call to <code>NS()</code></p>
+</blockquote>
+<p>Thank me later.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">library</span>(micromodal)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># module UI:</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>sayhi_ui <span class="ot">&lt;-</span> \(id) {</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  ns <span class="ot">&lt;-</span> <span class="fu">NS</span>(id)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="fu">tagList</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">h1</span>(<span class="st">&quot;Hello&quot;</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>    <span class="fu">actionLink</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>      <span class="at">inputId =</span> <span class="fu">ns</span>(<span class="st">&quot;sayhi&quot;</span>),</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>      <span class="at">label =</span> <span class="st">&quot;Say Hi&quot;</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>      <span class="st">`</span><span class="at">data-micromodal-trigger</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">ns</span>(<span class="st">&quot;greetings_modal&quot;</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>    ),</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>    <span class="fu">micromodal</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>      <span class="at">id =</span> <span class="fu">ns</span>(<span class="st">&quot;greetings_modal&quot;</span>),</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Greetings folks!&quot;</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>      <span class="at">content =</span> tags<span class="sc">$</span><span class="fu">p</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>        <span class="st">&quot;I&#39;d like to thank you for joining us here today.&quot;</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>      )</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>    )</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>  )</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>}</span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co"># module server is not necessary in our case, just putting it here </span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co"># for formality:</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a>sayhi_server <span class="ot">&lt;-</span> \(id) {</span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>  <span class="fu">moduleServer</span>(</span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a>    <span class="at">id =</span> id,</span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a>    <span class="at">module =</span> \(input, output, session) {</span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a>      </span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a>    }</span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a>  )</span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a>}</span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a>ui <span class="ot">&lt;-</span> bslib<span class="sc">::</span><span class="fu">page</span>(</span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;In Modules&quot;</span>,</span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a>  <span class="at">theme =</span> bslib<span class="sc">::</span><span class="fu">bs_theme</span>(<span class="at">version =</span> <span class="dv">5</span>),</span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a>  <span class="fu">use_micromodal</span>(),</span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">div</span>(</span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a>    <span class="at">class =</span> <span class="st">&quot;container&quot;</span>,</span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a>    <span class="fu">sayhi_ui</span>(<span class="st">&quot;hi&quot;</span>)</span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a>  )</span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a>)</span>
+<span id="cb6-44"><a href="#cb6-44" tabindex="-1"></a></span>
+<span id="cb6-45"><a href="#cb6-45" tabindex="-1"></a>server <span class="ot">&lt;-</span> \(input, output, session) {}</span>
+<span id="cb6-46"><a href="#cb6-46" tabindex="-1"></a></span>
+<span id="cb6-47"><a href="#cb6-47" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
